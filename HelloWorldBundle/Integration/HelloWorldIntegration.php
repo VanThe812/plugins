@@ -1,11 +1,9 @@
 <?php
 namespace MauticPlugin\HelloWorldBundle\Integration;
 
-use MauticPlugin\IntegrationsBundle\Integration\BasicIntegration;
-use MauticPlugin\IntegrationsBundle\Integration\Interfaces\BasicInterface;
-use MauticPlugin\IntegrationsBundle\Integration\Interfaces\IntegrationInterface;
+use Mautic\PluginBundle\Integration\AbstractIntegration;
 
-class HelloWorldIntegration extends BasicIntegration
+class HelloWorldIntegration extends AbstractIntegration
 {
     const NAME = 'HelloWorld';
 
@@ -23,4 +21,17 @@ class HelloWorldIntegration extends BasicIntegration
     {
         return 'plugins/HelloWorldBundle/Assets/images/earth.png';
     }
+    public function getAuthenticationType()
+    {
+        // Just use none for now and I'll build in "basic" later
+        return 'none';
+    }
+
+
+    // public function getRequiredKeyFields()
+    // {
+    //     return [
+    //         'secret' => 'mautic.integration.gmail.secret',
+    //     ];
+    // }
 }

@@ -125,7 +125,8 @@ return array(
         'integrations' => [
             'helloworld.integration.helloworld' => [
                 'class' => \MauticPlugin\HelloWorldBundle\Integration\HelloWorldIntegration::class,
-                'arguments' => [
+                'tags'  => [
+                    'mautic.basic_integration',
                 ],
             ],
             
