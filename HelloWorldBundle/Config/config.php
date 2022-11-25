@@ -5,7 +5,7 @@ return array(
     'name'        => 'Hello World',
     'description' => 'This is an example config file for a simple Hellow World plugin.',
     'author'      => 'Marty Mautibot',
-    'version'     => '1.0.0',
+    'version'     => '1.0.1',
     'routes'   => array(
         //url  ma yeu cau phai login moi co the vao(se them /s/ va url)
         'main' => array(
@@ -41,30 +41,30 @@ return array(
                 'controller' => 'HelloWorldBundle:Default:admin'
             ),
         ),
-        //url se dc them truc tiep vao url cua Mautic, co the truy cap ma ko can login
-        'public' => array(
-            'plugin_helloworld_goodbye' => array(
-                'path'       => '/hello/goodbye',
-                'controller' => 'HelloWorldBundle:Default:goodbye'
-            ),
-            'plugin_helloworld_contact' => array(
-                'path'       => '/hello/contact',
-                'controller' => 'HelloWorldBundle:Default:contact'
-            )
-        ),
-        //Khu vực API an toàn của Mautic (/api/ sẽ được tự động thêm vào đường dẫn). Ủy quyền OAuth sẽ được yêu cầu để truy cập vào đường dẫn.
-        'api' => array(
-            'plugin_helloworld_api' => array(
-                'path'       => '/hello',
-                'controller' => 'HelloWorldBundle:Api:howdy',
-                'method'     => 'GET'
-            )
-        )
+        // //url se dc them truc tiep vao url cua Mautic, co the truy cap ma ko can login
+        // 'public' => array(
+        //     'plugin_helloworld_goodbye' => array(
+        //         'path'       => '/hello/goodbye',
+        //         'controller' => 'HelloWorldBundle:Default:goodbye'
+        //     ),
+        //     'plugin_helloworld_contact' => array(
+        //         'path'       => '/hello/contact',
+        //         'controller' => 'HelloWorldBundle:Default:contact'
+        //     )
+        // ),
+        // //Khu vực API an toàn của Mautic (/api/ sẽ được tự động thêm vào đường dẫn). Ủy quyền OAuth sẽ được yêu cầu để truy cập vào đường dẫn.
+        // 'api' => array(
+        //     'plugin_helloworld_api' => array(
+        //         'path'       => '/hello',
+        //         'controller' => 'HelloWorldBundle:Api:howdy',
+        //         'method'     => 'GET'
+        //     )
+        // )
     ),
     'menu'     => array(
         'main' => array(
             // vi tri cua menu trong list menu tong
-            'priority' => 4,
+            'priority' => 1,
             'items'    => array(
                 'plugin.helloworld.index' => array(
                     'id'        => 'plugin_helloworld_index',
@@ -97,31 +97,31 @@ return array(
         )
     ),
     'services'    => array(
-        // 'events' => array(
-        //     'plugin.helloworld.leadbundle.subscriber' => array(
-        //         'class' => 'MauticPlugin\HelloWorldBundle\EventListener\LeadSubscriber'
-        //     )
-        // ),
-        // 'forms'  => array(
-        //     'plugin.helloworld.form' => array(
-        //         'class' => 'MauticPlugin\HelloWorldBundle\Form\Type\HelloWorldType',
-        //         'alias' => 'helloworld'
-        //     )
-        // ),
-        // 'helpers' => array(
-        //     'mautic.helper.helloworld' => array(
-        //         'class'     => 'MauticPlugin\HelloWorldBundle\Helper\HelloWorldHelper',
-        //         'alias'     => 'helloworld'
-        //     )
-        // ),
-        // 'other'   => array(
-        //     'plugin.helloworld.mars.validator' => array(
-        //         'class'     => 'MauticPlugin\HelloWorldBundle\Form\Validator\Constraints\MarsValidator',
-        //         'arguments' => 'mautic.factory',
-        //         'tag'       => 'validator.constraint_validator',
-        //         'alias'     => 'helloworld_mars'
-        //     )
-        // ),
+        'events' => array(
+            'plugin.helloworld.leadbundle.subscriber' => array(
+                'class' => 'MauticPlugin\HelloWorldBundle\EventListener\LeadSubscriber'
+            )
+        ),
+        'forms'  => array(
+            'plugin.helloworld.form' => array(
+                'class' => 'MauticPlugin\HelloWorldBundle\Form\Type\HelloWorldType',
+                'alias' => 'helloworld'
+            )
+        ),
+        'helpers' => array(
+            'mautic.helper.helloworld' => array(
+                'class'     => 'MauticPlugin\HelloWorldBundle\Helper\HelloWorldHelper',
+                'alias'     => 'helloworld'
+            )
+        ),
+        'other'   => array(
+            'plugin.helloworld.mars.validator' => array(
+                'class'     => 'MauticPlugin\HelloWorldBundle\Form\Validator\Constraints\MarsValidator',
+                'arguments' => 'mautic.factory',
+                'tag'       => 'validator.constraint_validator',
+                'alias'     => 'helloworld_mars'
+            )
+        ),
         'integrations' => [
             'helloworld.integration.helloworld' => [
                 'class' => \MauticPlugin\HelloWorldBundle\Integration\HelloWorldIntegration::class,
@@ -132,10 +132,10 @@ return array(
             
         ],
     ),
-    // 'categories' => array(
-    //     'plugin:helloWorld' => 'mautic.helloworld.world.categories'
-    // ),
-    // 'parameters' => array(
-    //     'helloworld_api_enabled' => false
-    // )
+    'categories' => array(
+        'plugin:helloWorld' => 'mautic.helloworld.world.categories'
+    ),
+    'parameters' => array(
+        'helloworld_api_enabled' => false
+    )
 );

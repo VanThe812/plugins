@@ -9,8 +9,8 @@ class WorldModel extends CommonModel
 {
 
 
-    public function getWorldDetails($data)
-    {
+    // public function getWorldDetails($data)
+    // {
  
-    }
+    // }
 }

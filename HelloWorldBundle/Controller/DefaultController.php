@@ -17,10 +17,14 @@ class DefaultController extends FormController
     public function worldAction($world = 'earth')
     {
         /** @var \MauticPlugin\HelloWorldBundle\Model\WorldModel $model */
-        $model = $this->getModel('helloworld.world');
+        // $model = $this->getModel('helloworld.world');
+        // echo "<pre>";
+        // print_r($model);
+        // echo "</pre>";
+        // exit;
 
         // Retrieve details about the world
-        $worldDetails = $model->getWorldDetails($world);
+        // $worldDetails = $model->getWorldDetails($world);
 
         return $this->delegateView(
             array(
@@ -28,7 +32,7 @@ class DefaultController extends FormController
                 //2 bien ko dc phep dat:$view, $app 
                 'viewParameters'  => array(
                     'world'   => $world,
-                    'details' => $worldDetails
+                    'details' => $world
                 ),
                 'contentTemplate' => 'HelloWorldBundle:World:details.html.php',
                 'passthroughVars' => array(
@@ -40,6 +44,8 @@ class DefaultController extends FormController
         );
     }
     public function adminAction() {
+        // $config = $this->mergeConfigToFeatureSettings();
+        
         echo "<pre>";
         print_r("hi admin");
         echo "</pre>";
