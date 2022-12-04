@@ -5,6 +5,7 @@ namespace MauticPlugin\PersonalizeAttachmentsBundle\Model;
 
 use Mautic\CoreBundle\Model\FormModel;
 use MauticPlugin\PersonalizeAttachmentsBundle\Entity\Attachments;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class AssetModel extends FormModel
 {
@@ -34,7 +35,7 @@ class AssetModel extends FormModel
     public function createForm($entity, $formFactory, $action = null, $options = [])
     {
         if (!$entity instanceof Attachments) {
-            throw new MethodNotAllowedHttpException(['Asset']);
+            throw new MethodNotAllowedHttpException(['Attachments']);
         }
 
         if (!empty($action)) {
@@ -43,5 +44,17 @@ class AssetModel extends FormModel
 
         return $formFactory->create('plugin_asset', $entity, $options);
     }
+    public function saveEntity($entity, $unlock = true)
+    {
+        
 
+        if (!$entity->isNew()) {
+            //increase the revision
+            $revision = $entity->getRevision();
+            ++$revision;
+            $entity->setRevision($revision);
+        }
+
+        parent::saveEntity($entity, $unlock);
+    }
 }

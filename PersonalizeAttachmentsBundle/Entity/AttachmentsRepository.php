@@ -26,31 +26,31 @@ class AttachmentsRepository extends CommonRepository
      */
     public function getPersonalizeattachmentsAttachmentsList($search = '', $limit = 10, $start = 0, $viewOther = false, array $ignoreIds = [])
     {
-        $qb = $this->createQueryBuilder('a');
+        $qb = $this->createQueryBuilder('p');
         $qb->select('partial t.{id, created_by, path, lead_lists_id}');
 
         if (!empty($search)) {
             if (is_array($search)) {
                 $search = array_map('intval', $search);
-                $qb->andWhere($qb->expr()->in('a.id', ':search'))
+                $qb->andWhere($qb->expr()->in('p.id', ':search'))
                     ->setParameter('search', $search);
             } else {
-                $qb->andWhere($qb->expr()->like('a.path', ':search'))
+                $qb->andWhere($qb->expr()->like('p.path', ':search'))
                     ->setParameter('search', "%{$search}%");
             }
         }
 
         if (!$viewOther) {
-            $qb->andWhere($qb->expr()->eq('a.createdBy', ':id'))
+            $qb->andWhere($qb->expr()->eq('p.createdBy', ':id'))
                 ->setParameter('id', $this->currentUser->getId());
         }
 
         // if (!empty($ignoreIds)) {
-        //     $qb->andWhere($qb->expr()->notIn('a.id', ':ignoreIds'))
+        //     $qb->andWhere($qb->expr()->notIn('p.id', ':ignoreIds'))
         //         ->setParameter('ignoreIds', $ignoreIds);
         // }
 
-        $qb->orderBy('a.path');
+        $qb->orderBy('p.path');
 
         if (!empty($limit)) {
             $qb->setFirstResult($start)

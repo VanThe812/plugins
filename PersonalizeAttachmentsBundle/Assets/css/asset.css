@@ -1,0 +1,37 @@
+#file-container {
+    position: relative;
+    min-height: 20rem;
+    height: 20rem;
+    width: 50rem;
+    border: 2px dotted black;
+    border-radius: 10px;
+
+}
+#file-container #groupFile {
+    height: inherit;
+    width: inherit;
+    opacity: 0;
+}
+#countFile {
+    position: absolute;
+    text-align: center;
+    top: 9rem;
+    left: 0;
+    right: 0;
+}
+#displayFile {
+    display: flex;
+    flex-direction: column;
+    color: black;
+    font-size: 13px;
+}
+#displayFile .files-list {
+    padding: 6px 12px;
+    background-color: rgb(213, 213, 213);
+    margin: 2px 0;
+    border-radius: 10px;
+    width: 20rem;
+}
+#displayFile .files-list:hover {
+    background-color: rgb(183, 183, 183);
+}

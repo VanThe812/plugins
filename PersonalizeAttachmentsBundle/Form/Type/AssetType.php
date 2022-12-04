@@ -16,21 +16,21 @@ use Mautic\CoreBundle\Form\DataTransformer\IdToEntityModelTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
-
+use Symfony\Component\Translation\TranslatorInterface;
+use Mautic\CoreBundle\Translation\Translator;
 /**
  * Class AssetType.
  */
 class AssetType extends AbstractType
 {
-   
-    protected $em;
+    private $em;
 
     /**
      * @param EntityManager $em
      */
     public function __construct(EntityManager $em)
     {
+        
         $this->em = $em;
     }
 
@@ -40,53 +40,63 @@ class AssetType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addEventSubscriber(new CleanFormSubscriber(['description' => 'html']));
+        // $builder->addEventSubscriber(new CleanFormSubscriber(['description' => 'html']));
         // $builder->addEventSubscriber(new FormExitSubscriber('asset.asset', $options));
 
-        $maxUploadSize = "";
-        $builder->add('tempName', 'text', [
-            'label'      => "Upload a file (max filesize allowed = $maxUploadSize MB)",
+        $maxUploadSize = "6";
+        $builder->add('tempName', 'hidden', [
+            'label'      => "Upload multiple files (max filesize allowed = $maxUploadSize MB)",
             'label_attr' => ['class' => 'control-label'],
             'required'   => false,
         ]);
 
-
-      
-
-        // $builder->add('remotePath', 'text', [
-        //     'label'      => 'mautic.asset.asset.form.remotePath',
-        //     'label_attr' => ['class' => 'control-label'],
-        //     'attr'       => ['class' => 'form-control'],
-        //     'required'   => false,
-        // ]);
-
-
         // $transformer = new IdToEntityModelTransformer($this->em, 'MauticLeadBundle:LeadList', 'id', true);
         // $builder->add(
         //     $builder->create(
-        //         'lists',
+        //         'leadlist',
         //         'leadlist_choices',
         //         [
         //             'label'      => 'Contact segment',
         //             'label_attr' => ['class' => 'control-label'],
         //             'attr'       => [
         //                 'class'        => 'form-control',
-        //                 'data-show-on' => '{"emailform_segmentTranslationParent":[""]}',
         //             ],
         //             'multiple' => true,
         //             'expanded' => false,
         //             'required' => true,
         //         ]
         //     )
-        //         // ->addModelTransformer($transformer)
+        //         ->addModelTransformer($transformer)
+        // );
+        $builder->add(
+            'list',
+            'leadlist_choices',
+            [
+                'label'       => 'Contact segment',
+                'label_attr'  => ['class' => 'control-label'],
+                'attr'        => ['class' => 'form-control'],
+                'empty_value' => '',
+                'required'    => true,
+            ]
+        );
+        // $builder->add(
+        //     'files',
+        //     'file',
+        //     [
+        //         'label'       => 'Contact segment',
+        //         'label_attr'  => ['class' => 'control-label'],
+        //         'attr'        => ['class' => 'form-control'],
+        //         'empty_value' => '',
+        //         'required'    => true,
+        //     ]
         // );
 
 
    
 
-        $builder->add('tempId', 'hidden', [
-            'required' => false,
-        ]);
+        // $builder->add('tempId', 'hidden', [
+        //     'required' => false,
+        // ]);
 
         $builder->add('buttons', 'form_buttons', []);
 
@@ -98,10 +108,10 @@ class AssetType extends AbstractType
     // /**
     //  * @param OptionsResolverInterface $resolver
     //  */
-    // public function setDefaultOptions(OptionsResolverInterface $resolver)
-    // {
-    //     $resolver->setDefaults(['data_class' => 'MauticPlugin\PersonalizeAttachmentsBundle\Entity\Asset']);
-    // }
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(['data_class' => 'MauticPlugin\PersonalizeAttachmentsBundle\Entity\Attachments']);
+    }
 
     /**
      * @return string

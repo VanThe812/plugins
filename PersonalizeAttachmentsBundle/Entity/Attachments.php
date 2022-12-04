@@ -30,67 +30,61 @@ class Attachments extends FormEntity
      */
     private $id;
 
-    // /**
-    //  * @var null|\DateTime
-    //  */
     private $time;
 
-    /**
-     * @var string
-     */
+    private $name;
+
+    private $description;
+
     private $path;
 
-    /**
-     * @var int
-     */
     private $size;
 
-    /**
-     * @var File
-     */
-    private $file;
-
-    /**
-     * Holds upload directory.
-     */
-    private $uploadDir;
+    private $files;
 
     /**
      * Holds max size of uploaded file.
      */
     private $maxSize;
 
-    /**
-     * Temporary location when asset file is beeing updated.
-     * We need to keep the old file till we are sure the new
-     * one is stored correctly.
-     */
-    private $temp;
 
-    /**
-     * Temporary ID used for file upload and validations
-     * before the actual ID is known.
-     */
-    private $tempId;
-    
-    /**
-     * Temporary file name used for file upload and validations
-     * before the actual ID is known.
-     */
-    private $tempName;
 
-    
+    public static function loadMetadata(ORM\ClassMetadata $metadata)
+    {
+        $builder = new ClassMetadataBuilder($metadata);
+
+        $builder->setTable('attachments')
+            ->setCustomRepositoryClass('MauticPlugin\PersonalizeAttachmentsBundle\Entity\AttachmentsRepository')
+            ->addIndex(['path'], 'attachments_path_search');
+
+        $builder->addIdColumns();
+
+        $builder->createField('time', 'string')
+            ->nullable()
+            ->build();
+
+        $builder->createManyToOne('user', 'Mautic\UserBundle\Entity\User')
+            ->addJoinColumn('created_by', 'id', true, false, 'SET NULL')
+            ->build();
+
+        $builder->createField('path', 'string')
+            ->nullable()
+            ->build();
+
+        $builder->createField('size', 'integer')
+            ->nullable()
+            ->build();
+        $builder->createManyToOne('list', 'Mautic\LeadBundle\Entity\LeadList')
+            ->addJoinColumn('list_id', 'id', true, false, 'SET NULL')
+            ->build();
+    }
+
+
     //-----------------------------------------------
-    /**
-     * Get id.
-     *
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
-
 
     public function setTime($time)
     {
@@ -100,23 +94,61 @@ class Attachments extends FormEntity
         return $this;
     }
 
-    /**
-     * Get publishDown.
-     *
-     * @return \DateTime
-     */
     public function getTime()
     {
         return $this->time;
     }
 
-    /**
-     * Set path.
-     *
-     * @param string $path
-     *
-     * @return Attachments
-     */
+    // public function setName($name)
+    // {
+
+    //     $this->name = $name;
+
+    //     return $this;
+    // }
+
+    // public function getName()
+    // {
+    //     return $this->name;
+    // }
+
+    // public function setDescription($description)
+    // {
+
+    //     $this->description = $description;
+
+    //     return $this;
+    // }
+
+    // public function getDescription()
+    // {
+    //     return $this->description;
+    // }
+
+    // public function getUserId()
+    // {
+    //     return $this->userId;
+    // }
+
+    // public function setUserId($userId)
+    // {
+    //     $this->userId = $userId;
+
+    //     return $this;
+    // }
+
+    // public function getListId()
+    // {
+    //     return $this->listId;
+    // }
+
+    // public function setListId($listId)
+    // {
+    //     $this->listId = $listId;
+
+    //     return $this;
+    // }
+
     public function setPath($path)
     {
         $this->isChanged('path', $path);
@@ -125,21 +157,11 @@ class Attachments extends FormEntity
         return $this;
     }
 
-    /**
-     * Get path.
-     *
-     * @return string
-     */
     public function getPath()
     {
         return $this->path;
     }
 
-    /**
-     * @param mixed $size
-     *
-     * @return Attachments
-     */
     public function setSize($size)
     {
         $this->size = $size;
@@ -147,75 +169,17 @@ class Attachments extends FormEntity
         return $this;
     }
 
-    /**
-     * Sets file.
-     *
-     * @param File $file
-     */
-    public function setFile(File $file = null)
+    public function setFiles($files)
     {
-        $this->file = $file;
-
-        // check if we have an old asset path
-        if (isset($this->path)) {
-            // store the old name to delete after the update
-            $this->temp = $this->path;
-            $this->path = null;
-        }
-    }
-
-    /**
-     * Get file.
-     *
-     * @return UploadedFile
-     */
-    public function getFile()
-    {
-        // if file is not set, try to find it at temp folder
-        if ($this->isLocal() && empty($this->file)) {
-            $tempFile = $this->loadFile(true);
-
-            if ($tempFile) {
-                $this->setFile($tempFile);
-            }
-        }
-
-        return $this->file;
-    }
-
-    /**
-     * Returns absolute path to upload dir.
-     *
-     * @return string
-     */
-    protected function getUploadDir()
-    {
-        if ($this->uploadDir) {
-            return $this->uploadDir;
-        }
-
-        return 'media/files';
-    }
-
-    /**
-     * Set uploadDir.
-     *
-     * @param string $uploadDir
-     *
-     * @return Attachments
-     */
-    public function setUploadDir($uploadDir)
-    {
-        $this->uploadDir = $uploadDir;
+        $this->files = $files;
 
         return $this;
     }
-/**
-     * Returns maximal uploadable size in bytes.
-     * If not set, 6000000 is default.
-     *
-     * @return string
-     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
     protected function getMaxSize()
     {
         if ($this->maxSize) {
@@ -225,67 +189,15 @@ class Attachments extends FormEntity
         return 6000000;
     }
 
-    /**
-     * Set max size.
-     *
-     * @param string $maxSize
-     *
-     * @return Attachments
-     */
     public function setMaxSize($maxSize)
     {
         $this->maxSize = $maxSize;
 
         return $this;
     }
-    
-    /**
-     * Set temporary file name.
-     *
-     * @param string $tempName
-     *
-     * @return Attachments
-     */
-    public function setTempName($tempName)
-    {
-        $this->tempName = $tempName;
 
-        return $this;
-    }
 
-    /**
-     * Get temporary file name.
-     *
-     * @return string
-     */
-    public function getTempName()
-    {
-        return $this->tempName;
-    }
 
-    /**
-     * Set temporary ID.
-     *
-     * @param string $tempId
-     *
-     * @return Attachments
-     */
-    public function setTempId($tempId)
-    {
-        $this->tempId = $tempId;
-
-        return $this;
-    }
-
-    /**
-     * Get temporary ID.
-     *
-     * @return string
-     */
-    public function getTempId()
-    {
-        return $this->tempId;
-    }
 
     /**
      * Borrowed from Symfony\Component\HttpFoundation\File\UploadedFile::getMaxFilesize.
@@ -322,44 +234,31 @@ class Attachments extends FormEntity
 
         return $max;
     }
-    /**
-     * @param ORM\ClassMetadata $metadata
-     */
-    public static function loadMetadata(ORM\ClassMetadata $metadata)
+
+
+    public function upload($id, $list_file)
     {
-        $builder = new ClassMetadataBuilder($metadata);
-
-        $builder->setTable('attachments')
-            ->setCustomRepositoryClass('MauticPlugin\PersonalizeAttachmentsBundle\Entity\AttachmentsRepository')
-            ->addIndex(['path'], 'attachments_path_search');
-
-        $builder->addIdColumns();
-
-        $builder->createField('time', 'string')
-            ->nullable()
-            ->build();
-
-        $builder->createManyToOne('user', User::class)
-            ->addJoinColumn('created_by', 'id', true, false, 'SET NULL')
-            ->build();
-
-        $builder->createField('path', 'string')
-            ->nullable()
-            ->build();
-
-        $builder->createField('size', 'integer')
-            ->nullable()
-            ->build();
-        $builder->createManyToOne('leadlist', LeadList::class)
-            ->addJoinColumn('lead_lists_id', 'id', true, false, 'SET NULL')
-            ->build();
+        if(!file_exists("media/files/attachments")) {
+            mkdir("media/files/attachments", 0777);
+        }
+        $target_dir = "media/files/attachments/".$id;
+        if(!file_exists($target_dir)) {
+            mkdir($target_dir, 0777);
+        }
+        // $list_file = $this->getFiles();
+                    
+        foreach ($list_file as $file) {
+            $target_file = $target_dir."/" . $file['name'];
+            if (file_exists($target_file)) {
+                unlink($target_file);
+            }
+            if (move_uploaded_file($file['tmp_name'], $target_file)) {
+                echo "The file ". htmlspecialchars( basename( $file["name"])). " has been uploaded.";
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }
+        }
+      
     }
-    public static function loadValidatorMetadata(ClassMetadata $metadata)
-    {
-        $metadata->addPropertyConstraint('text', new Assert\Length(
-            [
-                'max' => 280,
-            ]
-        ));
-    }
+
 }

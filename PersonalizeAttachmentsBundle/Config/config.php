@@ -46,9 +46,7 @@ return array(
             'plugin.form.type.asset' => [
                 'class'     => 'MauticPlugin\PersonalizeAttachmentsBundle\Form\Type\AssetType',
                 'arguments' => [
-                    'translator',
-                    'mautic.helper.theme',
-                    'mautic.asset.model.asset',
+                    'doctrine.orm.entity_manager',
                 ],
                 'alias' => 'plugin_asset',
             ],
