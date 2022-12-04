@@ -19,24 +19,24 @@ class PersonalizeAttachmentsBundle extends PluginBundleBase
      * @param null          $metadata
      */
 
-    static public function onPluginInstall(Plugin $plugin, MauticFactory $factory, $metadata = null)
+    // static public function onPluginInstall(Plugin $plugin, MauticFactory $factory, $metadata = null)
+    // {
+    //     if ($metadata !== null) {
+    //         self::installPluginSchema($metadata, $factory);
+    //     }
+
+    //     // Do other install stuff
+    // }
+    public static function onPluginInstall(Plugin $plugin, MauticFactory $factory, $metadata = null, $installedSchema = null)
     {
-        if ($metadata !== null) {
-            self::installPluginSchema($metadata, $factory);
+        if ($metadata === null) {
+            $metadata = self::getMetadata($factory->getEntityManager());
         }
 
-        // Do other install stuff
+        if ($metadata !== null) {
+            parent::onPluginInstall($plugin, $factory, $metadata, $installedSchema);
+        }
     }
-    // public static function onPluginInstall(Plugin $plugin, MauticFactory $factory, $metadata = null, $installedSchema = null)
-    // {
-    //     if ($metadata === null) {
-    //         $metadata = self::getMetadata($factory->getEntityManager());
-    //     }
-
-    //     if ($metadata !== null) {
-    //         parent::onPluginInstall($plugin, $factory, $metadata, $installedSchema);
-    //     }
-    // }
 
     /**
     * Called by PluginController::reloadAction when the plugin version does not match what's installed
@@ -60,11 +60,11 @@ class PersonalizeAttachmentsBundle extends PluginBundleBase
             case '1.0':
                 switch ($platform) {
                     case 'mysql':
-                        $queries[] = 'ALTER TABLE ' . MAUTIC_TABLE_PREFIX . 'worlds CHANGE description LONGTEXT DEFAULT NULL';
+                        //$queries[] = 'ALTER TABLE ' . MAUTIC_TABLE_PREFIX . 'worlds CHANGE description LONGTEXT DEFAULT NULL';
                         break;
 
                     case 'postgresql':
-                        $queries[] = 'ALTER TABLE ' . MAUTIC_TABLE_PREFIX . 'worlds ALTER description ALTER TYPE TEXT';
+                        //$queries[] = 'ALTER TABLE ' . MAUTIC_TABLE_PREFIX . 'worlds ALTER description ALTER TYPE TEXT';
                         break;
                 }
 
