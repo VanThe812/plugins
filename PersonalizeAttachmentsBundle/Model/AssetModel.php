@@ -48,13 +48,18 @@ class AssetModel extends FormModel
     {
         
 
-        if (!$entity->isNew()) {
-            //increase the revision
-            $revision = $entity->getRevision();
-            ++$revision;
-            $entity->setRevision($revision);
-        }
+        // if (!$entity->isNew()) {
+        //     //increase the revision
+        //     $revision = $entity->getRevision();
+        //     ++$revision;
+        //     $entity->setRevision($revision);
+        // }
 
         parent::saveEntity($entity, $unlock);
     }
+    public function getRepository()
+    {
+        return $this->em->getRepository('PersonalizeAttachmentsBundle:Attachments');
+    }
+
 }

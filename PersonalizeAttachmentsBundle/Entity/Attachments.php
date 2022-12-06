@@ -14,14 +14,16 @@ namespace MauticPlugin\PersonalizeAttachmentsBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
 use Mautic\CoreBundle\Entity\FormEntity;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Validator\Constraints as Assert;
+// use Symfony\Component\HttpFoundation\File\File;
+// use Symfony\Component\HttpFoundation\File\UploadedFile;
+// use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Mautic\UserBundle\Entity\User;
 use Mautic\LeadBundle\Entity\LeadList;
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
- * Class Asset.
+ * Class Attachments.
  */
 class Attachments extends FormEntity
 {
@@ -29,8 +31,6 @@ class Attachments extends FormEntity
      * @var int
      */
     private $id;
-
-    private $time;
 
     private $name;
 
@@ -42,12 +42,24 @@ class Attachments extends FormEntity
 
     private $files;
 
+    private $userId;
+
+    private $listId;
+
+    private $segmentId;
+
+    private $tempName;
+
+    private $list;
     /**
      * Holds max size of uploaded file.
      */
     private $maxSize;
 
-
+    // public function __construct()
+    // {
+    //     $this->lists               = new ArrayCollection();
+    // }
 
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
@@ -55,26 +67,23 @@ class Attachments extends FormEntity
 
         $builder->setTable('attachments')
             ->setCustomRepositoryClass('MauticPlugin\PersonalizeAttachmentsBundle\Entity\AttachmentsRepository')
-            ->addIndex(['path'], 'attachments_path_search');
+            ->addIndex(['name'], 'attachments_name_search');
 
-        $builder->addIdColumns();
+        $builder->addIdColumns('name');
 
-        $builder->createField('time', 'string')
+
+        // $builder->createManyToOne('userId', 'Mautic\UserBundle\Entity\User')
+        //     ->addJoinColumn('created_by', 'id', true, false, 'SET NULL')
+        //     ->build();
+
+        $builder->createField('path', 'text')
             ->nullable()
             ->build();
 
-        $builder->createManyToOne('user', 'Mautic\UserBundle\Entity\User')
-            ->addJoinColumn('created_by', 'id', true, false, 'SET NULL')
-            ->build();
-
-        $builder->createField('path', 'string')
+        $builder->createField('segmentId', 'integer')
             ->nullable()
             ->build();
-
-        $builder->createField('size', 'integer')
-            ->nullable()
-            ->build();
-        $builder->createManyToOne('list', 'Mautic\LeadBundle\Entity\LeadList')
+        $builder->createManyToOne('listId', LeadList::class)
             ->addJoinColumn('list_id', 'id', true, false, 'SET NULL')
             ->build();
     }
@@ -86,69 +95,67 @@ class Attachments extends FormEntity
         return $this->id;
     }
 
-    public function setTime($time)
+
+    public function setName($name)
     {
 
-        $this->time = $time;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getTime()
+    public function getName()
     {
-        return $this->time;
+        return $this->name;
     }
 
-    // public function setName($name)
-    // {
+    public function setDescription($description)
+    {
 
-    //     $this->name = $name;
+        $this->description = $description;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // public function getName()
-    // {
-    //     return $this->name;
-    // }
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
-    // public function setDescription($description)
-    // {
+    public function getUserId()
+    {
+        return $this->userId;
+    }
 
-    //     $this->description = $description;
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // public function getDescription()
-    // {
-    //     return $this->description;
-    // }
+    public function getListId()
+    {
+        return $this->listId;
+    }
 
-    // public function getUserId()
-    // {
-    //     return $this->userId;
-    // }
+    public function setListId($listId)
+    {
+        $this->listId = $listId;
 
-    // public function setUserId($userId)
-    // {
-    //     $this->userId = $userId;
+        return $this;
+    }
+    public function getSegmentId()
+    {
+        return $this->segmentId;
+    }
 
-    //     return $this;
-    // }
+    public function setSegmentId($segmentId)
+    {
+        $this->segmentId = $segmentId;
 
-    // public function getListId()
-    // {
-    //     return $this->listId;
-    // }
-
-    // public function setListId($listId)
-    // {
-    //     $this->listId = $listId;
-
-    //     return $this;
-    // }
-
+        return $this;
+    }
     public function setPath($path)
     {
         $this->isChanged('path', $path);
@@ -196,7 +203,53 @@ class Attachments extends FormEntity
         return $this;
     }
 
+    /**
+     * Set temporary file name.
+     *
+     * @param string $tempName
+     *
+     * @return Asset
+     */
+    public function setTempName($tempName)
+    {
+        $this->tempName = $tempName;
 
+        return $this;
+    }
+
+    /**
+     * Get temporary file name.
+     *
+     * @return string
+     */
+    public function getTempName()
+    {
+        return $this->tempName;
+    }
+
+    public function setList($list)
+    {
+        $this->list = $list;
+
+        return $this;
+    }
+
+    public function getList()
+    {
+        return $this->list;
+    }
+
+    public function getCount() {
+        $list = $this->getPath();
+        $list = rtrim($list,",");
+        $path_arr = explode($list,',');
+        return count($path_arr);
+    }
+    public function getSegmentName() {
+        $id = $this->getSegmentId();
+        $entity = LeadList::getEntity($id);
+        return 1;
+    }
 
 
     /**

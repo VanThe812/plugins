@@ -12,6 +12,9 @@
     width: inherit;
     opacity: 0;
 }
+#file-container:hover {
+    background-color: rgb(213, 213, 213);
+}
 #countFile {
     position: absolute;
     text-align: center;
@@ -26,12 +29,15 @@
     font-size: 13px;
 }
 #displayFile .files-list {
+    margin: 8px 0;
+    border-radius: 10px;
+}
+#displayFile .files-list span {
     padding: 6px 12px;
     background-color: rgb(213, 213, 213);
-    margin: 2px 0;
     border-radius: 10px;
-    width: 20rem;
 }
-#displayFile .files-list:hover {
+
+#displayFile .files-list span:hover {
     background-color: rgb(183, 183, 183);
 }

@@ -50,10 +50,10 @@ class AssetType extends AbstractType
             'required'   => false,
         ]);
 
-        // $transformer = new IdToEntityModelTransformer($this->em, 'MauticLeadBundle:LeadList', 'id', true);
+        $transformer = new IdToEntityModelTransformer($this->em, 'MauticLeadBundle:LeadList', 'id', true);
         // $builder->add(
         //     $builder->create(
-        //         'leadlist',
+        //         'listId',
         //         'leadlist_choices',
         //         [
         //             'label'      => 'Contact segment',
@@ -61,15 +61,13 @@ class AssetType extends AbstractType
         //             'attr'       => [
         //                 'class'        => 'form-control',
         //             ],
-        //             'multiple' => true,
-        //             'expanded' => false,
         //             'required' => true,
         //         ]
         //     )
         //         ->addModelTransformer($transformer)
         // );
         $builder->add(
-            'list',
+            'segmentId',
             'leadlist_choices',
             [
                 'label'       => 'Contact segment',
@@ -79,24 +77,24 @@ class AssetType extends AbstractType
                 'required'    => true,
             ]
         );
-        // $builder->add(
-        //     'files',
-        //     'file',
-        //     [
-        //         'label'       => 'Contact segment',
-        //         'label_attr'  => ['class' => 'control-label'],
-        //         'attr'        => ['class' => 'form-control'],
-        //         'empty_value' => '',
-        //         'required'    => true,
-        //     ]
-        // );
-
-
+        $builder->add(
+            'name',
+            'text',
+            [
+                'label'       => 'Title',
+                'label_attr'  => ['class' => 'control-label'],
+                'attr'        => ['class' => 'form-control'],
+                'required'    => true,
+            ]
+        );
+        $builder->add('description', 'textarea', [
+            'label'      => 'mautic.core.description',
+            'label_attr' => ['class' => 'control-label'],
+            'attr'       => ['class' => 'form-control editor'],
+            'required'   => false,
+        ]);
+        $builder->add('isPublished', 'yesno_button_group');
    
-
-        // $builder->add('tempId', 'hidden', [
-        //     'required' => false,
-        // ]);
 
         $builder->add('buttons', 'form_buttons', []);
 

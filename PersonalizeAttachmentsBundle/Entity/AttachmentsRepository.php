@@ -15,6 +15,21 @@ use Mautic\CoreBundle\Entity\CommonRepository;
 
 class AttachmentsRepository extends CommonRepository
 {
+
+
+    public function getEntitiess(array $args = [])
+    {
+        // $q = $this
+        //     ->createQueryBuilder('a')
+        //     ->select('a')
+        //     ->leftJoin('a.segmentId', 's');
+
+        // $args['qb'] = $q;
+
+        return parent::getEntities();
+    }
+
+    
     /**
      * @param string $search
      * @param int    $limit
@@ -27,7 +42,7 @@ class AttachmentsRepository extends CommonRepository
     public function getPersonalizeattachmentsAttachmentsList($search = '', $limit = 10, $start = 0, $viewOther = false, array $ignoreIds = [])
     {
         $qb = $this->createQueryBuilder('p');
-        $qb->select('partial t.{id, created_by, path, lead_lists_id}');
+        $qb->select('partial t.{id, created_by, path, list_id}');
 
         if (!empty($search)) {
             if (is_array($search)) {
@@ -40,17 +55,17 @@ class AttachmentsRepository extends CommonRepository
             }
         }
 
-        if (!$viewOther) {
-            $qb->andWhere($qb->expr()->eq('p.createdBy', ':id'))
-                ->setParameter('id', $this->currentUser->getId());
-        }
+        // if (!$viewOther) {
+        //     $qb->andWhere($qb->expr()->eq('p.created_by', ':id'))
+        //         ->setParameter('id', $this->currentUser->getId());
+        // }
 
         // if (!empty($ignoreIds)) {
         //     $qb->andWhere($qb->expr()->notIn('p.id', ':ignoreIds'))
         //         ->setParameter('ignoreIds', $ignoreIds);
         // }
 
-        $qb->orderBy('p.path');
+        // $qb->orderBy('p.path');
 
         if (!empty($limit)) {
             $qb->setFirstResult($start)
