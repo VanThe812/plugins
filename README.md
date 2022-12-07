@@ -6,3 +6,6 @@ Plugin PersonalizeAttachmentsBundle sẽ cho phép người dùng thêm các fil
 - Vũ Văn Thế
 - Phạm Thị Phương Thảo
 - Nguyễn Đình Dũng
+
+## Giải pháp
+- Nằm trong fodex doc
