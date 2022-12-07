@@ -4,13 +4,17 @@
 $view->extend('MauticCoreBundle:Default:content.html.php');
 echo $view['assets']->includeScript('plugins/PersonalizeAttachmentsBundle/Assets/js/asset.js');
 echo $view['assets']->includeStylesheet('plugins/PersonalizeAttachmentsBundle/Assets/css/asset.css');
-$header = ($activeAsset->getId()) ? "Edit Attachments".['%name%' => $activeAsset->getName()]: "New Attachments";
+$header = ($activeAsset->getId()) ? "Edit Attachments ". $activeAsset->getName() : "New Attachments";
 $view['slots']->set('headerTitle', $header);
 // $view['slots']->set('mauticContent', 'plugin_asset');
     
 
 ?>
 
+<script>
+	<?php echo 'CountAttachment = '.$activeAsset->getCountAttachment().';'; ?>
+	<?php echo 'AttachmentsName = "'.$activeAsset->getAttachmentsName().'";'; ?>
+</script>
 <?php echo $view['form']->start($form); ?>
 <!-- start: box layout -->
 <div class="box-layout">
@@ -29,6 +33,7 @@ $view['slots']->set('headerTitle', $header);
 						        <div id="file-container">
                                     <input type="file" name="plugin_attachment_files[]" onchange="getAllFile()" multiple id="groupFile">
                                     <h4 id="countFile">Drop the file here or click to browse and select the file.</h4>
+                                    
                                 </div>
 					        </div>
 				        </div>

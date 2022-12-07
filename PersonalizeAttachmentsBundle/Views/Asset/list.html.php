@@ -120,7 +120,7 @@ if ($tmpl == 'index') {
                         <td  class="visible-md visible-lg">
                             
                         </td>
-                        <td class="visible-md visible-lg"><?php echo $item->getCount(); ?></td>
+                        <td class="visible-md visible-lg"><?php echo $item->getCountAttachment(); ?></td>
                         <td class="visible-md visible-lg"><?php echo $item->getId(); ?></td>
                     </tr>
                 <?php endforeach; ?>

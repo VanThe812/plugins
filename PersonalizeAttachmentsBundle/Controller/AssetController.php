@@ -128,19 +128,27 @@ class AssetController extends FormController
                 if ($valid = $this->isFormValid($form)) {
                     $list_id = $entity->getSegmentId();
                     if($list_id!=null){
-                        $files_name = $this->upload($list_id);
-                        
-                        $entity->setPath($files_name);
+                        $list_file = $this->reArrayFiles($_FILES['plugin_attachment_files']);
+                        $paths = $this->getPaths($files_name);
+                        $entity->setPath($paths);
                         $model->saveEntity($entity);
+
+                        $res = $this->upload($entity->getId(), $list_file);
+
+                    
+                        $this->addFlash('mautic.core.notice.created', [
+                            '%name%'      => $entity->getName(),
+                            '%menu_link%' => 'plugin_personalizeattachments_asset_index',
+                            '%url%'       => $this->generateUrl('plugin_personalizeattachments_asset_action', [
+                                'objectAction' => 'edit',
+                                'objectId'     => $entity->getId(),
+                            ]),
+                        ]);
+                        if (!$form->get('buttons')->get('save')->isClicked()) {
+                            //return edit view so that all the session stuff is loaded
+                            return $this->editAction($entity->getId(), true);
+                        }
                     }
-                    $this->addFlash('mautic.core.notice.created', [
-                        '%name%'      => $entity->getName(),
-                        '%menu_link%' => 'plugin_personalizeattachments_asset_index',
-                        '%url%'       => $this->generateUrl('plugin_personalizeattachments_asset_action', [
-                            'objectAction' => 'edit',
-                            'objectId'     => $entity->getId(),
-                        ]),
-                    ]);
                 }
             }else {
                 $viewParameters = ['page' => $page];
@@ -195,8 +203,7 @@ class AssetController extends FormController
             array(
                 'viewParameters'  => array(
                     'form'             => $form->createView(),
-                    // 'activeAsset'      => $entity,
-                    "tam"   => '1',
+                    'activeAsset'      => $entity,
                 ),
                 'contentTemplate' => 'PersonalizeAttachmentsBundle:Asset:form.html.php',
                 'passthroughVars' => array(
@@ -205,6 +212,36 @@ class AssetController extends FormController
                     'route'         => $this->generateUrl('plugin_personalizeattachments_asset_action', [
                         'objectAction' => 'edit',
                     ]),
+                )
+            )
+        );
+    }
+    public function viewAction($objectId) {
+        $model = $this->getModel('personalizeattachments.asset');
+        $session = $this->get('session');
+        $security    = $this->get('mautic.security');
+        $entity = $model->getEntity($objectId);
+
+        return $this->delegateView(
+            array(
+                'viewParameters'  => array(
+                    'activeAsset'      => $entity,
+                    'permissions' => $security->isGranted([
+                        'plugin:personalizeattachments:asset:view',
+                        'plugin:personalizeattachments:asset:viewown',
+                        'plugin:personalizeattachments:asset:viewother',
+                        'plugin:personalizeattachments:asset:create',
+                        'plugin:personalizeattachments:asset:editown',
+                        'plugin:personalizeattachments:asset:editother',
+                        'plugin:personalizeattachments:asset:deleteown',
+                        'plugin:personalizeattachments:asset:deleteother',
+                    ], 'RETURN_ARRAY'),
+                    'security' => $security
+                ),
+                'contentTemplate' => 'PersonalizeAttachmentsBundle:Asset:details.html.php',
+                'passthroughVars' => array(
+                    'activeLink'    => '#plugin_personalizeattachments_index',
+                    'mauticContent' => 'plugin_asset',
                 )
             )
         );
@@ -223,7 +260,14 @@ class AssetController extends FormController
     
         return $file_ary;
     }
-    function upload($id) {
+    function getPaths($list_file) {
+        $files_name = "";
+        foreach ($list_file as $file) {
+            $files_name .= $file['name'].",";
+        }
+        return $files_name;
+    }
+    function upload($id, $list_file) {
         if(!file_exists("media/files/attachments")) {
             mkdir("media/files/attachments", 0777);
         }
@@ -231,7 +275,7 @@ class AssetController extends FormController
         if(!file_exists($target_dir)) {
             mkdir($target_dir, 0777);
         }
-        $list_file = $this->reArrayFiles($_FILES['plugin_attachment_files']);
+        
         $files_name = "";
         foreach ($list_file as $file) {
             $target_file = $target_dir."/" . $file['name'];

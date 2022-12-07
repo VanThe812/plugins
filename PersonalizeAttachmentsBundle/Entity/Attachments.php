@@ -239,12 +239,22 @@ class Attachments extends FormEntity
         return $this->list;
     }
 
-    public function getCount() {
+    public function getCountAttachment() {
         $list = $this->getPath();
+        if ($list == null)
+            return 0;
         $list = rtrim($list,",");
-        $path_arr = explode($list,',');
+        $path_arr = explode(',', $list);
         return count($path_arr);
     }
+
+    public function getAttachmentsName() {
+        $list = $this->getPath();
+        $list = rtrim($list,",");
+        // $path_arr = explode(',', $list);
+        return $list;
+    }
+
     public function getSegmentName() {
         $id = $this->getSegmentId();
         $entity = LeadList::getEntity($id);
