@@ -37,7 +37,26 @@ class AssetController extends FormController
             )
         );
     }
-    
+    public function viewAction($objectId) 
+    {
+        $model = $this->getModel('personalizeattachments.asset');
+
+
+        return $this->delegateView(
+            array(
+                'viewParameters'  => array(
+                ),
+                'contentTemplate' => 'PersonalizeAttachmentsBundle:Asset:default.html.php',
+                'passthroughVars' => array(
+                    'activeLink'    => '#plugin_personalizeattachments_asset_index',
+                    'mauticContent' => 'plugin_asset',
+                    'route'         => $this->generateUrl('plugin_personalizeattachments_asset_action', [
+                        'objectAction' => 'new',
+                    ]),
+                )
+            )
+        );
+    }
     public function newAction($entity = null)
     {
   
@@ -76,4 +95,6 @@ class AssetController extends FormController
             )
         );
     }
+
+     
 }
