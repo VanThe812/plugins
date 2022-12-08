@@ -35,5 +35,18 @@ class PersonalizeAttachmentsIntegration extends AbstractIntegration
         // Just use none for now and I'll build in "basic" later
         return 'none';
     }
+    public function appendToForm(&$builder, $data, $formArea) {
+        if ($formArea == 'features') {
+            $builder->add('choice_type', 'choice', [
+                'choices' => [
+                    'local'    => 'System',
+                    'icloud'   => 'Cloud',
+                ],
+                'label'       => 'Attachment personalization file saving type',
+                'label_attr'  => ['class' => 'control-label'],
+                'attr'        => ['class' => 'form-control'], 
+            ]);
+        }
+    }   
 
 }
