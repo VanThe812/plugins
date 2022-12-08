@@ -57,4 +57,44 @@ class AssetController extends FormController
             )
         );
     }
+    public function newAction($entity = null)
+    {
+  
+        
+        return $this->delegateView(
+            array(
+                'viewParameters'  => array(
+                ),
+                'contentTemplate' => 'PersonalizeAttachmentsBundle:Asset:form.html.php',
+                'passthroughVars' => array(
+                    'activeLink'    => '#plugin_personalizeattachments_index',
+                    'mauticContent' => 'plugin_asset',
+                    'route'         => $this->generateUrl('plugin_personalizeattachments_asset_action', [
+                        'objectAction' => 'new',
+                    ]),
+                )
+            )
+        );
+    }
+    public function editAction($objectId, $ignorePost = false)
+    {
+  
+        
+        return $this->delegateView(
+            array(
+                'viewParameters'  => array(
+                ),
+                'contentTemplate' => 'PersonalizeAttachmentsBundle:Asset:form.html.php',
+                'passthroughVars' => array(
+                    'activeLink'    => '#plugin_personalizeattachments_index',
+                    'mauticContent' => 'plugin_asset',
+                    'route'         => $this->generateUrl('plugin_personalizeattachments_asset_action', [
+                        'objectAction' => 'edit',
+                    ]),
+                )
+            )
+        );
+    }
+
+     
 }
