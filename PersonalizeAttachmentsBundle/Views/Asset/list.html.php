@@ -41,8 +41,8 @@
                     echo $view->render(
                         'MauticCoreBundle:Helper:tableheader.html.php',
                         [
-                            'sessionVar' => 'attachments',
-                            'orderBy'    => 'segmentId',
+                            'sessionVar' => 'Email',
+                            'orderBy'    => 'email_id',
                             'text'       => 'mautic.core.filter.lists',
                             'class'      => '',
                             'default'    => true,
