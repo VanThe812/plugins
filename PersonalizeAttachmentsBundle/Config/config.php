@@ -56,6 +56,15 @@ return array(
             ],
             
         ],
+        'forms' => [
+            'plugin.form.type.asset' => [
+                'class'     => 'MauticPlugin\PersonalizeAttachmentsBundle\Form\Type\AssetType',
+                'arguments' => [
+                    'doctrine.orm.entity_manager',
+                ],
+                'alias' => 'plugin_asset',
+            ],
+        ],
     ),
 
 );
