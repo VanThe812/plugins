@@ -19,7 +19,7 @@ use Mautic\CoreBundle\Entity\FormEntity;
 // use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Mautic\UserBundle\Entity\User;
-use Mautic\LeadBundle\Entity\LeadList;
+use Mautic\EmailBundle\Entity\Email;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -51,6 +51,8 @@ class Attachments extends FormEntity
     private $tempName;
 
     private $list;
+
+    private $email;
     /**
      * Holds max size of uploaded file.
      */
@@ -80,11 +82,11 @@ class Attachments extends FormEntity
             ->nullable()
             ->build();
 
-        $builder->createField('emailId', 'integer')
-            ->nullable()
-            ->build();
-        $builder->createManyToOne('listId', LeadList::class)
-            ->addJoinColumn('list_id', 'id', true, false, 'SET NULL')
+        // $builder->createField('emailId', 'integer')
+        //     ->nullable()
+        //     ->build();
+            $builder->createManyToOne('email', Email::class)
+            ->addJoinColumn('email_id', 'id', true, false, 'SET NULL')
             ->build();
     }
 
@@ -237,6 +239,19 @@ class Attachments extends FormEntity
     public function getList()
     {
         return $this->list;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+
+    public function setEMail(Email $email)
+    {
+        $this->email = $email;
+
+        return $this;
     }
 
     public function getCountAttachment() {

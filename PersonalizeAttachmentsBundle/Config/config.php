@@ -65,6 +65,11 @@ return array(
                 'alias' => 'plugin_asset',
             ],
         ],
+        'events' => array(
+            'plugin.personalizeattachments.emailbundle.subscriber' => array(
+                'class' => 'MauticPlugin\PersonalizeAttachmentsBundle\EventListener\EmailSubscriber'
+            )
+        ),
     ),
 
 );

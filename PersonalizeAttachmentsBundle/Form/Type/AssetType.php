@@ -56,7 +56,7 @@ class AssetType extends AbstractType
         $transformer = new IdToEntityModelTransformer($this->em, 'MauticEmailBundle:Email');
         
         $builder->add(
-            'emailId',
+            'email_id',
             'leadlist_choices',
             [
                 'label'       => 'Email',
