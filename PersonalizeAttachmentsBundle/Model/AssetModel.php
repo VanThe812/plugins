@@ -3,6 +3,7 @@
 
 namespace MauticPlugin\PersonalizeAttachmentsBundle\Model;
 
+use MauticPlugin\PersonalizeAttachmentsBundle\Entity\Attachments;
 use Mautic\CoreBundle\Model\FormModel;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 

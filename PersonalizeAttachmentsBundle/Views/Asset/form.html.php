@@ -1,26 +1,23 @@
 <?php
-// plugins/PersonalizeAttachmentsBundle/Views/Asset/form.html.php
-/*
- * @author      FFC_HOU
- *
- * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
- */
 
-    $view->extend('MauticCoreBundle:Default:content.html.php');
-    echo $view['assets']->includeScript('plugins/PersonalizeAttachmentsBundle/Assets/js/asset.js');
-    echo $view['assets']->includeStylesheet('plugins/PersonalizeAttachmentsBundle/Assets/css/asset.css');
-    $header = ($activeAsset->getId()) ? "Edit Attachments ". $activeAsset->getName() : "New Attachments";
-    $view['slots']->set('headerTitle', $header);
+
+$view->extend('MauticCoreBundle:Default:content.html.php');
+echo $view['assets']->includeScript('plugins/PersonalizeAttachmentsBundle/Assets/js/asset.js');
+echo $view['assets']->includeStylesheet('plugins/PersonalizeAttachmentsBundle/Assets/css/asset.css');
+$header = ($activeAsset->getId()) ? "Edit Attachments ". $activeAsset->getName() : "New Attachments";
+$view['slots']->set('headerTitle', $header);
+// $view['slots']->set('mauticContent', 'plugin_asset');
+    
 
 ?>
 
 <script>
 	<?php echo 'CountAttachment = '.$activeAsset->getCountAttachment().';'; ?>
-	<?php echo 'AttachmentsName = "'.$activeAsset->getAttachmentsName().'";';  ?>
+	<?php echo 'AttachmentsName = "'.$activeAsset->getAttachmentsName().'";'; ?>
 </script>
-<?php echo $view['form']->start($form);  ?>
+<?php echo $view['form']->start($form); ?>
 <!-- start: box layout -->
-<div class="box-layout ">
+<div class="box-layout">
     <!-- container -->
     <div class="col-md-9 bg-auto height-auto bdr-r">
         <div class="pa-md">
@@ -29,9 +26,9 @@
                     <div class="col-md-12 pl-0">
                         <div class="row">
 					        <div class="form-group col-xs-12 ">
-						        <?php echo $view['form']->label($form['tempName']);  ?>
-						        <?php echo $view['form']->widget($form['tempName']);  ?>
-						        <?php echo $view['form']->errors($form['tempName']);  ?>
+						        <?php echo $view['form']->label($form['tempName']); ?>
+						        <?php echo $view['form']->widget($form['tempName']); ?>
+						        <?php echo $view['form']->errors($form['tempName']); ?>
 						        <div class="help-block mdropzone-error"></div>
 						        <div id="file-container">
                                     <input type="file" name="plugin_attachment_files[]" onchange="getAllFile()" multiple id="groupFile">
@@ -54,14 +51,14 @@
                     <div class="col-md-12 pl-0">
                         <div class="row">
 					        <div class="form-group col-xs-12 ">
-						        <?php echo $view['form']->row($form['name']);  ?>
+						        <?php echo $view['form']->row($form['name']); ?>
 					        </div>
 				        </div>
 					</div>
                     <div class="col-md-12 pl-0">
                         <div class="row">
 					        <div class="form-group col-xs-12 ">
-						        <?php echo $view['form']->row($form['description']);  ?>
+						        <?php echo $view['form']->row($form['description']); ?>
 					        </div>
 				        </div>
 					</div>
@@ -72,7 +69,7 @@
     <div class="col-md-3 bg-white height-auto">
         <div class="pr-lg pl-lg pt-md pb-md">
 			<?php
-                echo $view['form']->row($form['segmentId']);
+                echo $view['form']->row($form['emailId']);
                 echo $view['form']->row($form['isPublished']);
             ?>
 		</div>

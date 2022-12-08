@@ -1,6 +1,4 @@
 <?php
- 
-// plugins/PersonalizeAttachmentsBundle/Form/Type/AssetType.php
 
 /*
  * @copyright   2014 Mautic Contributors. All rights reserved
@@ -23,7 +21,6 @@ use Mautic\CoreBundle\Translation\Translator;
 /**
  * Class AssetType.
  */
-
 class AssetType extends AbstractType
 {
     private $em;
@@ -43,26 +40,32 @@ class AssetType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // $builder->addEventSubscriber(new CleanFormSubscriber(['description' => 'html']));
+        // $builder->addEventSubscriber(new FormExitSubscriber('asset.asset', $options));
+
         $maxUploadSize = "6";
         $builder->add('tempName', 'hidden', [
-            'label'       => "Upload multiple files (max filesize allowed = $maxUploadSize MB)",
-            'label_attr'  => ['class' => 'control-label'],
-            'required'    => false,
+            'label'      => "Upload multiple files (max filesize allowed = $maxUploadSize MB)",
+            'label_attr' => ['class' => 'control-label'],
+            'required'   => false,
         ]);
 
+        //lay id 
         // $transformer = new IdToEntityModelTransformer($this->em, 'MauticLeadBundle:LeadList', 'id', true);
+
+        $transformer = new IdToEntityModelTransformer($this->em, 'MauticEmailBundle:Email');
         
-        // $builder->add(
-        //     'segmentId',
-        //     'leadlist_choices',
-        //     [
-        //         'label'       => 'Contact segment',
-        //         'label_attr'  => ['class' => 'control-label'],
-        //         'attr'        => ['class' => 'form-control'],
-        //         'empty_value' => '',
-        //         'required'    => true,
-        //     ]
-        // );
+        $builder->add(
+            'emailId',
+            'leadlist_choices',
+            [
+                'label'       => 'Email',
+                'label_attr'  => ['class' => 'control-label'],
+                'attr'        => ['class' => 'form-control'],
+                'empty_value' => '',
+                'required'    => true,
+            ]
+        );
         $builder->add(
             'name',
             'text',
@@ -87,5 +90,21 @@ class AssetType extends AbstractType
         if (!empty($options['action'])) {
             $builder->setAction($options['action']);
         }
+    }
+
+    // /**
+    //  * @param OptionsResolverInterface $resolver
+    //  */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(['data_class' => 'MauticPlugin\PersonalizeAttachmentsBundle\Entity\Attachments']);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'plugin_asset';
     }
 }
