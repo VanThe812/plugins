@@ -1,0 +1,2 @@
+#v1.0.0->v1.0.1
+Tạo được giao diện chức năng attachments để người dùng thêm file cá nhân hóa vào hêj thống và làm các action của chức năng 
