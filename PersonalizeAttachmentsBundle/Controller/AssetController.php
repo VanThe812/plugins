@@ -153,7 +153,18 @@ class AssetController extends FormController
     }
     public function editAction($objectId, $ignorePost = false)
     {
-  
+        $model = $this->getModel('personalizeattachments.asset');
+        $method  = $this->request->getMethod();
+        $session = $this->get('session');
+
+        $entity = $model->getEntity($objectId);
+
+        $action = $this->generateUrl('plugin_personalizeattachments_asset_action', ['objectAction' => 'edit']);
+
+
+        //create the form
+        $form = $model->createForm($entity, $this->get('form.factory'), $action);
+
         
         return $this->delegateView(
             array(
